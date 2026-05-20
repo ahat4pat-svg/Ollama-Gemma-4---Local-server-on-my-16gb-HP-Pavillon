@@ -14,7 +14,7 @@ In this repo, "cleanup" means a **purge of previous Ollama/local-LLM services, b
 
 ## Quick start
 ```bash
-cd "$(dirname "$0")"
+cd /home/runner/work/Ollama-Gemma-4---Local-server-on-my-16gb-HP-Pavillon/Ollama-Gemma-4---Local-server-on-my-16gb-HP-Pavillon
 chmod +x scripts/*.sh
 ./scripts/cleanup_local_llm.sh
 ./scripts/install_ollama_gemma4.sh
