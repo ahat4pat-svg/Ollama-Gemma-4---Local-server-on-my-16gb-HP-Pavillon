@@ -13,12 +13,20 @@ sudo systemctl enable ollama || true
 sudo systemctl restart ollama || true
 
 echo "[install] Waiting for Ollama API..."
+api_ready="false"
 for _ in {1..20}; do
   if curl -fsS http://127.0.0.1:11434/api/tags >/dev/null 2>&1; then
+    api_ready="true"
     break
   fi
   sleep 1
 done
+
+if [[ "${api_ready}" != "true" ]]; then
+  echo "[install] ERROR: Ollama API did not start at http://127.0.0.1:11434 within 20 seconds."
+  echo "[install] Check service status with: sudo systemctl status ollama"
+  exit 1
+fi
 
 echo "[install] Pulling model: ${MODEL_NAME}..."
 ollama pull "${MODEL_NAME}"
