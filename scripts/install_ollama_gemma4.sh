@@ -32,9 +32,9 @@ echo "[install] Pulling model: ${MODEL_NAME}..."
 ollama pull "${MODEL_NAME}"
 
 if ! ollama show "${MODEL_NAME}" >/dev/null 2>&1; then
-  echo "[install] ERROR: ${MODEL_NAME} is unavailable in your Ollama registry."
-  echo "[install] Check available models/tags and retry with:"
-  echo "  MODEL_NAME=<available-tag> ./scripts/install_ollama_gemma4.sh"
+  echo "[install] ERROR: ${MODEL_NAME} could not be loaded after pull."
+  echo "[install] Check disk space, Ollama logs, and available tags, then retry with:"
+  echo "  MODEL_NAME=<tag> ./scripts/install_ollama_gemma4.sh"
   exit 1
 fi
 
@@ -51,6 +51,6 @@ ollama create "${MODEL_ALIAS}" -f /tmp/Gemma4-HP16.Modelfile
 rm -f /tmp/Gemma4-HP16.Modelfile
 
 echo "[install] Smoke test..."
-ollama run "${MODEL_ALIAS}" "Réponds en une phrase: installation terminée ?"
+ollama run "${MODEL_ALIAS}" "Reply in one sentence: installation complete?"
 
 echo "[install] Done. Use: ollama run ${MODEL_ALIAS}"
