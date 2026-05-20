@@ -2,7 +2,11 @@
 set -euo pipefail
 
 echo "[install] Installing Ollama..."
-curl -fsSL https://ollama.com/install.sh | sh
+# Official installer provided by Ollama.
+install_script="$(mktemp)"
+curl -fsSL https://ollama.com/install.sh -o "${install_script}"
+sh "${install_script}"
+rm -f "${install_script}"
 
 MODEL_NAME="${MODEL_NAME:-gemma4}"
 MODEL_ALIAS="${MODEL_ALIAS:-${MODEL_NAME}-local}"
@@ -44,13 +48,14 @@ echo "[install] If available, pull a quantized tag for 16 GB RAM (example):"
 echo "  ollama pull gemma4:q4_k_m"
 
 echo "[install] Creating tuned model alias with KV-cache-friendly context..."
-cat > /tmp/Gemma4-local.Modelfile <<EOF
+modelfile_path="$(mktemp)"
+cat > "${modelfile_path}" <<EOF
 FROM ${MODEL_NAME}
 PARAMETER num_ctx ${CONTEXT_SIZE}
 EOF
 
-ollama create "${MODEL_ALIAS}" -f /tmp/Gemma4-local.Modelfile
-rm -f /tmp/Gemma4-local.Modelfile
+ollama create "${MODEL_ALIAS}" -f "${modelfile_path}"
+rm -f "${modelfile_path}"
 
 echo "[install] Smoke test..."
 ollama run "${MODEL_ALIAS}" "Reply in one sentence: installation complete?"
